@@ -6,7 +6,9 @@
 
 ### 如何运行？
 $:cd half_sync_half_reactor
+
 $:make
+
 $:./webserver.out x.x.x.x:x (自己的ip地址和端口号)
 
 ### 运行结果
