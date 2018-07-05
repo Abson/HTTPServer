@@ -12,3 +12,4 @@ $:make
 $:./webserver.out x.x.x.x:x (自己的ip地址和端口号)
 
 ### 运行结果
+![](https://github.com/Abson/HTTPServer/blob/master/screenshoot/WechatIMG4863.jpeg)
