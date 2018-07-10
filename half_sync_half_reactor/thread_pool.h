@@ -76,7 +76,8 @@ ThreadPool<T>::~ThreadPool() {
 }
 
 template <typename T>
-bool ThreadPool<T>::append(std::shared_ptr<T> request) {
+bool ThreadPool<T>::append(std::shared_ptr<T> request) 
+{
   /*操作工作队列一定要加锁*/
   {
     CritScope cs(&queue_lock_);
@@ -90,7 +91,8 @@ bool ThreadPool<T>::append(std::shared_ptr<T> request) {
 } 
 
 template <typename T>
-void ThreadPool<T>::Run() {
+void ThreadPool<T>::Run()
+{
   while(!stop_) {
     event_->Wait(Event::kForever);
     std::shared_ptr<T> request;

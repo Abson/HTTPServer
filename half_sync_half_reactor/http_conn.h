@@ -4,8 +4,9 @@
 #include "thread_pool.h"
 #include "socketaddress.h"
 #include <sys/stat.h>
+#include "userfactory.h"
 
-class HTTPConn : public RequestHandlerInterface  {
+class HTTPConn : public RequestHandlerInterface, public Keyable<int>  {
 public:
   HTTPConn();
   ~HTTPConn();
@@ -19,6 +20,10 @@ public:
   bool Read() override;
 
   bool Write() override;
+
+  void set_key(int key) override { key_ = key; }
+
+  int key() const override { return key_; }
 
   void CloseConn(bool real_close = true);
 public:

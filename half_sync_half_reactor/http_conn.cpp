@@ -370,14 +370,14 @@ bool HTTPConn::Write()
       return false;
     }
     
-    printf("server write bytes to sock_fd:%d\n %s\n", sock_fd_, write_buf_);
+    printf("%s server write bytes to sock_fd:%d\n %s\n", __func__, sock_fd_, write_buf_);
     
     // byte_to_send -= temp;
     byte_have_send += temp;
 
     if (byte_to_send <= byte_have_send) {
       /*发送HTTP响应成功, 根据HTTP请求中的 Connection 字段决定是否立即关闭连接*/ 
-      Unmap();
+      Unmap(); // 关闭内存映射
       if (keeplive_) 
       {
         Init();
@@ -494,3 +494,4 @@ void HTTPConn::CloseConn(bool real_close)
     user_count_ --;
   }
 }
+

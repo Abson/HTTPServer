@@ -1,5 +1,6 @@
 #include "http_conn.h"
 #include "commont.h"
+#include "userfactory.h"
 
 #define MAX_FD 0x10000
 #define MAX_EVENT_NUMBER 10000
@@ -11,7 +12,9 @@ extern bool HandleReadConnfd(int connfd);
 extern bool HandleWriteConnfd(int connfd);
 
 /*预先未每个可能的客户连接分配一个 HTTPConn 对象*/
-std::vector<std::shared_ptr<HTTPConn>> users(MAX_FD, std::make_shared<HTTPConn>());
+//std::vector<std::shared_ptr<HTTPConn>> users(MAX_FD, std::make_shared<HTTPConn>());
+
+std::shared_ptr<UserFactory<int, HTTPConn>> users(UserFactory<int, HTTPConn>::Create());
 
 std::unique_ptr<ThreadPool<HTTPConn>> pool = nullptr;
 
@@ -36,7 +39,6 @@ int main(int argc, const char* argv[]) {
     return 1;
   }
 
-  int user_count = 0;
   int listen_fd = socket(PF_INET, SOCK_STREAM, 0);
   assert(listen_fd);
  
@@ -81,7 +83,7 @@ int main(int argc, const char* argv[]) {
       else if (events[i].events & (EPOLLRDHUP | EPOLLHUP | EPOLLERR))
       {
         /*发生异常，直接关闭客户连接*/
-        users[sock_fd]->CloseConn(true);
+        users->Get(sock_fd)->CloseConn(true);
       }
       else if (events[i].events & EPOLLIN) 
       {
@@ -121,32 +123,34 @@ bool HandleListen(int listen_fd)
   SocketAddress addr;
   addr.FromSockAddr(client_addr);
   /*初始化客户连接*/
-  users[connfd]->Init(connfd, addr);
+  users->Get(connfd)->Init(connfd, addr);
   return true;
 }
 
 bool HandleReadConnfd(int connfd) 
 {
   /*根据读的结果, 决定是将任务添加到线程池, 还是关闭连接*/
-  if (users[connfd]->Read())
+  bool ret = users->Get(connfd)->Read(); // 获取客户端发送的字节流
+  printf("%s users->Get(connfd)->Read(): return %d \n", __func__, ret);
+  if (ret)
   {
-    pool->append(users[connfd]);
+    pool->append(users->Get(connfd)); // 通过线程池，派发到子线程当中去处理读操作
     return true;
   }
   else 
   {
-    users[connfd]->CloseConn(true);
+    users->Get(connfd)->CloseConn(true);
     return false;
   }
 }
 
 bool HandleWriteConnfd(int connfd)
 {
-  bool ret = users[connfd]->Write();
-  printf("__func__ users[connfd]->Write(): return %d \n", ret);
+  bool ret = users->Get(connfd)->Write();
+  printf("%s users->Get(connfd)->Write(): return %d \n", __func__, ret);
   if (!ret)
   {
-    users[connfd]->CloseConn(true);
+    users->Get(connfd)->CloseConn(true);
     return true;
   }
   return false;
