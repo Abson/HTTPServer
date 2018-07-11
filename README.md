@@ -17,4 +17,5 @@ $:./webserver.out x.x.x.x:x (自己的ip地址和端口号)
 ### Feature
 目前还写的比较low...
 1、目前 accept、Read、Write 方法都在主线程中通过 IO multiplexing 进行，后期应该改进为放在线程池中进行，避免阻塞主线程，加强主线程处理连接时的实时性
+
 2、添加 MySql 数据库的时候，加上一些个人信息接口之类
