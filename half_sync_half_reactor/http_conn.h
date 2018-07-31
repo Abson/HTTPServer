@@ -1,7 +1,7 @@
 #ifndef HTTP_CONNECTION_H
 #define HTTP_CONNECTION_H 
 
-#include "thread_pool.h"
+#include "thread/thread_pool.h"
 #include "socketaddress.h"
 #include <sys/stat.h>
 #include "userfactory.h"

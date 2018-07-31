@@ -93,21 +93,27 @@ bool ThreadPool<T>::append(std::shared_ptr<T> request)
 template <typename T>
 void ThreadPool<T>::Run()
 {
-  while(!stop_) {
+  // one loop per thread
+  while(!stop_) 
+  {
     event_->Wait(Event::kForever);
     std::shared_ptr<T> request;
     /*利用线程的抢占模式*/
     {
       CritScope cs(&queue_lock_);
-      if (work_queue_.empty()) {
+      
+      std::cout << "thread: " << pthread_self() << " start handle request!!!" << std::endl;
+
+      if (work_queue_.empty()) 
         continue;
-      }
+
       request = work_queue_.front();
       work_queue_.pop_front();
     }
-    if (!request) {
+
+    if (!request) 
       continue;
-    }
+
     request->Process();
   }
 }

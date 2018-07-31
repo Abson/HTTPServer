@@ -1,7 +1,7 @@
 #ifndef BASE_EVENT_H
 #define BASE_EVENT_H
 
-#include "constructormagic.h"
+#include "commont/constructormagic.h"
 #include <pthread.h>
 
 class Event {

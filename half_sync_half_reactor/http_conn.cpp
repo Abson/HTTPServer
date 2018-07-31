@@ -1,7 +1,7 @@
 #include "http_conn.h"
-#include "commont.h"
+#include "commont/commont.h"
 #include <sys/mman.h>
-#include "stringutils.h"
+#include "commont/stringutils.h"
 
 const char* doc_root = "/home/parallels/Desktop";
 
@@ -22,7 +22,7 @@ const char* ok_200_title = "OK";
 int HTTPConn::epoll_fd_ = -1;
 int HTTPConn::user_count_ = 0;
 
-HTTPConn::HTTPConn() : RequestHandlerInterface() {}
+HTTPConn::HTTPConn() {}
 HTTPConn::~HTTPConn() {}
 
 void HTTPConn::Init(int sock_fd, const SocketAddress& addr) 

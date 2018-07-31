@@ -4,8 +4,8 @@
 #include <map>
 #include <memory>
 #include "http_conn.h"
-#include "criticalsection.h"
-#include "constructormagic.h"
+#include "thread/criticalsection.h"
+#include "commont/constructormagic.h"
 #include <stdio.h>
 
 template <typename Key>
@@ -41,6 +41,7 @@ private:
 private:
   static void DeleteUserCallback(const std::weak_ptr<UserFactory>&weak_userfactory, T* user);
 
+  /*外层没有必要调用 remove，因为套接字会重用*/
   void RemoveUser(T* user);
 
 private:

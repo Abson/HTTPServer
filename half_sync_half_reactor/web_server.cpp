@@ -1,5 +1,5 @@
 #include "http_conn.h"
-#include "commont.h"
+#include "commont/commont.h"
 #include "userfactory.h"
 
 #define MAX_FD 0x10000
@@ -18,8 +18,8 @@ std::shared_ptr<UserFactory<int, HTTPConn>> users(UserFactory<int, HTTPConn>::Cr
 
 std::unique_ptr<ThreadPool<HTTPConn>> pool = nullptr;
 
-int main(int argc, const char* argv[]) {
-
+int main(int argc, const char* argv[]) 
+{
   if (argc <= 2) {
     printf("usage:%s ipaddress port_number\n", argv[0]);
     return 1;
@@ -63,6 +63,7 @@ int main(int argc, const char* argv[]) {
   base::AddFd(epoll_fd, listen_fd);
   HTTPConn::epoll_fd_ = epoll_fd;
 
+  // event loop
   while(1) 
   {
     int number = epoll_wait(epoll_fd, events, MAX_EVENT_NUMBER, -1);
@@ -101,7 +102,6 @@ int main(int argc, const char* argv[]) {
 
   base::RemoveFd(epoll_fd, listen_fd);
   close(epoll_fd);
-
   return 0;
 }
 
@@ -131,7 +131,7 @@ bool HandleReadConnfd(int connfd)
 {
   /*根据读的结果, 决定是将任务添加到线程池, 还是关闭连接*/
   bool ret = users->Get(connfd)->Read(); // 获取客户端发送的字节流
-  printf("%s users->Get(connfd)->Read(): return %d \n", __func__, ret);
+  printf("%s return %d \n", __func__, ret);
   if (ret)
   {
     pool->append(users->Get(connfd)); // 通过线程池，派发到子线程当中去处理读操作
@@ -147,7 +147,7 @@ bool HandleReadConnfd(int connfd)
 bool HandleWriteConnfd(int connfd)
 {
   bool ret = users->Get(connfd)->Write();
-  printf("%s users->Get(connfd)->Write(): return %d \n", __func__, ret);
+  printf("%s return %d \n", __func__, ret);
   if (!ret)
   {
     users->Get(connfd)->CloseConn(true);
