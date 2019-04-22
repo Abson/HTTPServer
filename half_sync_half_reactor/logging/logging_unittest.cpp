@@ -18,14 +18,14 @@ int main(int argc, const char* argv[])
   pthread_create(&thread, nullptr, logInThread, nullptr);
   pthread_join(thread, nullptr);
 
-  /* sleep(1); */
-  /* base::TimeZone beijing(8*3600, "CST"); */
-  /* base::Logger::setTimezone(beijing); */
-  /* LOG_TRACE << "trace CST"; */
-  /* LOG_DEBUG << "debug CST"; */
-  /* LOG_INFO << "Hello CST"; */
-  /* LOG_WARN << "World CST"; */
-  /* LOG_ERROR << "Error CST"; */
+  sleep(1);
+  base::TimeZone beijing(8*3600, "CST");
+  base::Logger::setTimezone(beijing);
+  LOG_TRACE << "trace CST";
+  LOG_DEBUG << "debug CST";
+  LOG_INFO << "Hello CST";
+  LOG_WARN << "World CST";
+  LOG_ERROR << "Error CST";
 
   return 0;
 }

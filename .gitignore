@@ -1,0 +1,6 @@
+
+half_sync_half_reactor/logging/logging.o
+half_sync_half_reactor/logging/logging_unittest.o
+half_sync_half_reactor/logging/logging_unittest.out
+half_sync_half_reactor/logging/timezone.o
+half_sync_half_reactor/logging/logging.o
